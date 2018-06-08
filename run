@@ -1,0 +1,8 @@
+#! /bin/bash
+
+
+run() {
+python spikepost-cmd.py --trace-file ~/log --stat=hist_instr
+
+}
+run
