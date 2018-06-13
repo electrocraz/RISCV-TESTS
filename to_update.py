@@ -4,8 +4,6 @@ import sqlite3
 
 conn = sqlite3.connect('set.db')
 print "Opened database successfully";
-
-
 '''Histogram post-processing module'''
 
 help_message = '{:<20s} {:<10s}'.format('hist_instr', 'Histogram of instructions')
@@ -40,9 +38,10 @@ def compute(input_file, args):
 
     for inst in cnt.most_common(output_size):
        print("  {0:<10s} {1:<10} {2:<10.2f}".format(inst[0], inst[1], 100*inst[1]/total_insts))
-       conn.execute("UPDATE instr SET  FREQ= CASE WHEN NAME= ? THEN FREQ+ ? WHEN NAME != ? THEN FREQ=? ELSE NULL END WHERE instr.NAME= ? ",(inst[0], inst[1], inst[0], inst[1], inst[0]));
+       conn.execute("UPDATE instr SET  FREQ= CASE WHEN NAME= ? THEN FREQ+ ? WHEN NAME != ? THEN FREQ=? ELSE NULL END WHERE NAME= ? ",(inst[0], inst[1], inst[0], inst[1], inst[0]));
+       conn.execute(" INSERT OR IGNORE INTO instr VALUES (?,?)", (inst[0], inst[1]));
        conn.commit() 
-    print "the table inst";
+    print "the table inst(sb.s)";
     cursor = conn.execute("SELECT name, freq from instr")
     for row in cursor:
         print "name = ", row[0]
